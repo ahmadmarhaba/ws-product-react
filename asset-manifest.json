@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/ws-product-react/static/css/main.05cd69d3.chunk.css",
-    "main.js": "/ws-product-react/static/js/main.32a1f657.chunk.js",
-    "main.js.map": "/ws-product-react/static/js/main.32a1f657.chunk.js.map",
+    "main.css": "/ws-product-react/static/css/main.41bd7dc2.chunk.css",
+    "main.js": "/ws-product-react/static/js/main.97c56ff6.chunk.js",
+    "main.js.map": "/ws-product-react/static/js/main.97c56ff6.chunk.js.map",
     "runtime-main.js": "/ws-product-react/static/js/runtime-main.dff5699a.js",
     "runtime-main.js.map": "/ws-product-react/static/js/runtime-main.dff5699a.js.map",
-    "static/js/2.57cf22e3.chunk.js": "/ws-product-react/static/js/2.57cf22e3.chunk.js",
-    "static/js/2.57cf22e3.chunk.js.map": "/ws-product-react/static/js/2.57cf22e3.chunk.js.map",
+    "static/js/2.d9df4d44.chunk.js": "/ws-product-react/static/js/2.d9df4d44.chunk.js",
+    "static/js/2.d9df4d44.chunk.js.map": "/ws-product-react/static/js/2.d9df4d44.chunk.js.map",
     "static/js/3.6866a35d.chunk.js": "/ws-product-react/static/js/3.6866a35d.chunk.js",
     "static/js/3.6866a35d.chunk.js.map": "/ws-product-react/static/js/3.6866a35d.chunk.js.map",
     "index.html": "/ws-product-react/index.html",
-    "static/css/main.05cd69d3.chunk.css.map": "/ws-product-react/static/css/main.05cd69d3.chunk.css.map",
-    "static/js/2.57cf22e3.chunk.js.LICENSE.txt": "/ws-product-react/static/js/2.57cf22e3.chunk.js.LICENSE.txt"
+    "static/css/main.41bd7dc2.chunk.css.map": "/ws-product-react/static/css/main.41bd7dc2.chunk.css.map",
+    "static/js/2.d9df4d44.chunk.js.LICENSE.txt": "/ws-product-react/static/js/2.d9df4d44.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.dff5699a.js",
-    "static/js/2.57cf22e3.chunk.js",
-    "static/css/main.05cd69d3.chunk.css",
-    "static/js/main.32a1f657.chunk.js"
+    "static/js/2.d9df4d44.chunk.js",
+    "static/css/main.41bd7dc2.chunk.css",
+    "static/js/main.97c56ff6.chunk.js"
   ]
 }
