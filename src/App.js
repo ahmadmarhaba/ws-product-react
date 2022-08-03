@@ -2,15 +2,12 @@ import './App.css';
 import React, { useState, useEffect} from 'react';
 import { Chart } from "react-google-charts";
 
-export const options = {
-  chart: {
-    title: "Box Office Earnings in First Two Weeks of Opening",
-    subtitle: "in millions of dollars (USD)",
-  },
-};
+import GoogleMapReact from 'google-map-react';
+
 function App() {
 
-  const pages = ["General Chart Visualization", "Data Table", "Geo Visualization"];
+  const proxyurl = "https://vast-glass-iron.glitch.me"
+  const pages = ["General Charts", "Data Table", "Geo Map"];
   const [page,SetPage] = useState(0)  
 
   const poiHeader = ["Id","Name","Latitude","Longitude"];
@@ -19,6 +16,11 @@ function App() {
   
   const [poiGeo,SetPoiGeo] = useState(null)
 
+  const [dataType,SetDatatype] = useState(0)
+
+  const [hourlyStats,SetHourlyStats] = useState(null)
+  const [dailyStats,SetDailyStats] = useState(null)
+
   const [hourlyEvent,SetHourlyEvent] = useState(null)
   const [dailyEvent,SetDailyEvent] = useState(null)
   const visuals = ["Line", "Bar", "LineChart", "BarChart"];
@@ -26,29 +28,39 @@ function App() {
   const [eventVisualSelected,SetEventVisualSelected] = useState(0)  
   
   useEffect(() => {
-    hourlyEvent === null && fetch('/events/hourly').then(response => response.json()).then(data => {
+    hourlyEvent === null && fetch(proxyurl+'/events/hourly').then(response => response.json()).then(data => {
       let array = [["Date","Events","Hour"]];
       data.forEach(element => {
         array.push([(new Date(element.date)).toDateString(),parseInt(element.events),element.hour])
       });
       SetHourlyEvent(array)
     });
-  }, [hourlyEvent]);
-
-  useEffect(() => {
-    dailyEvent === null && fetch('/events/daily').then(response => response.json()).then(data => {
+    dailyEvent === null && fetch(proxyurl+'/events/daily').then(response => response.json()).then(data => {
       let array = [["Date","Events"]];
       data.forEach(element => {
         array.push([(new Date(element.date)).toDateString(),parseInt(element.events)])
       });
       SetDailyEvent(array)
     });
-  }, [dailyEvent]);
 
-  useEffect(() => {
-    poiTable === null && fetch('/poi').then(response => response.json()).then(data => {
+    hourlyStats=== null && fetch(proxyurl+'/stats/hourly').then(response => response.json()).then(data => {
+      let array = [["date","hour","impressions","clicks", "revenue"]];
+      data.forEach(element => {
+        array.push([(new Date(element.date)).toDateString(),parseInt(element.hour),parseInt(element.impressions),parseInt(element.clicks),parseInt(element.revenue)])
+      });
+      SetHourlyStats(array)
+    });
+    dailyStats === null && fetch(proxyurl+'/stats/daily').then(response => response.json()).then(data => {
+      let array = [["date","impressions","clicks", "revenue"]];
+      data.forEach(element => {
+        array.push([(new Date(element.date)).toDateString(),parseInt(element.impressions),parseInt(element.clicks),parseInt(element.revenue)])
+      });
+      SetDailyStats(array)
+    });
+
+    poiTable === null && fetch(proxyurl+'/poi').then(response => response.json()).then(data => {
       let arrTable = [];
-      let arrGeo = [['Lat', 'Long', 'Name']];
+      let arrGeo = [];
       data.forEach(element => {
         arrTable.push([{ v: element.poi_id, f: element.poi_id.toString(), p: {style: ''} },{ v: element.name, f: element.name, p: {style: ''} },{ v: element.lat, f: element.lat.toString(), p: {style: ''} },{ v: element.lon, f: element.lon.toString(), p: {style: ''} } ]);
 
@@ -58,7 +70,8 @@ function App() {
       SetPoiTable(arrTable)
       SetPoiGeo(arrGeo)
     });
-  }, [poiTable]);
+  });
+
   function searchFunc(val){
     poiTable.forEach(element => {
       element.forEach(item => {
@@ -79,6 +92,15 @@ function App() {
       return [...temp, ...unfilteredArr];
     });
   }
+
+  const defaultProps = {
+    center: {
+      lat: 51.231487,
+      lng: -99.306211
+    },
+    zoom: 5
+  };
+
   return (
     <div className="App">
       <ul className="topNav">
@@ -95,6 +117,15 @@ function App() {
       {
         page === 0 && <div>
         <ul className="leftNav">
+        <li>
+          <label className={dataType === 0 ? "selectedButton" : ''}>
+            <input type="radio" value={0} name="dataType" onChange={ (e) => {SetDatatype(0)}} /> Events
+          </label>
+          <label className={dataType === 1 ? "selectedButton" : ''}>
+            <input type="radio" value={1} name="dataType" onChange={ (e) => {SetDatatype(1)}} /> Stats
+          </label>
+        </li>
+        <br /><br /><br />
         {
           visuals.map((item , index)=>{
             return (
@@ -106,8 +137,12 @@ function App() {
         }
       </ul>
       <div className="view">
+
       {
-        dailyEvent && <Chart chartType={eventVisual} width="100%" height="400px" data={dailyEvent} options={{
+        dataType === 1 ? <>
+        {
+        dailyStats && <Chart chartType={eventVisual} width="96%" height="400px" data={dailyStats} options={{
+          explorer: {},
           chart: {
             title: "Events Daily"
           },
@@ -115,12 +150,33 @@ function App() {
       }
       <br /><br />
       {
-        hourlyEvent && <Chart chartType={eventVisual} width="100%" height="400px" data={hourlyEvent} options={{
+        hourlyEvent && <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
+          explorer: {},
           chart: {
             title: "Events Hourly"
           },
         }} />
-      }  
+      }
+        </> : <>
+        {
+        dailyEvent && <Chart chartType={eventVisual} width="96%" height="400px" data={dailyEvent} options={{
+          explorer: {},
+          chart: {
+            title: "Events Daily"
+          },
+        }} />
+        }
+        <br /><br />
+        {
+          hourlyEvent && <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyEvent} options={{
+            explorer: {},
+            chart: {
+              title: "Events Hourly"
+            },
+          }} />
+        }
+        </>
+      }
       </div> 
         </div>
       }
@@ -135,8 +191,7 @@ function App() {
       }
       {
         page === 2 && poiTable && poiTable.length && <div className='view noNav'>
-          <input type="text" placeholder='Search here...' onChange={(e)=>{ searchFunc(e.target.value.toLowerCase()) }}/>
-          <Chart chartType="GeoChart" width="100%" height="100%" data={poiGeo} options={{
+          {/* <Chart chartType="GeoChart" width="100%" height="100%" data={poiGeo} options={{
             region: "CA",
             displayMode: 'markers',
             colorAxis: {colors: ['green', 'blue']},
@@ -145,13 +200,31 @@ function App() {
             geochartVersion: 11,
             resolution : "provinces",
             tooltip: {showColorCode: true , trigger : "selection"},
-            magnifyingGlass : {enable: true, zoomFactor: 15},
+            magnifyingGlass : {enable: true, zoomFactor: 25},
             explorer : true
-          }} />
+          }} /> */}
+      <GoogleMapReact
+        bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
+      >
+        {
+          poiGeo.map((item , index)=>{
+            return (
+              <Marker key={index}
+                lat={item[0]}
+                lng={item[1]}
+                text={item[2]}
+              />
+            )
+          })
+        }
+      </GoogleMapReact>
         </div>
       }
     </div>
+    
   );
 }
-
+const Marker = ( {text} ) => <div className="pin"><span>{text}</span><div></div></div>;
 export default App;
