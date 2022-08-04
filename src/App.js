@@ -1,7 +1,8 @@
 import './App.css';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect , useRef} from 'react';
 import { Chart } from "react-google-charts";
-
+import useSupercluster from "use-supercluster"
+import useSwr from "swr";
 import GoogleMapReact from 'google-map-react';
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
   const [eventVisual,SetEventVisual] = useState("Line")  
   const [eventVisualSelected,SetEventVisualSelected] = useState(0)  
   
+
+  
   useEffect(() => {
     hourlyEvent === null && fetch(proxyurl+'/events/hourly').then(response => response.json()).then(data => {
       let array = [["Date","Events","Hour"]];
@@ -42,7 +45,7 @@ function App() {
       });
       SetDailyEvent(array)
     });
-
+    
     hourlyStats=== null && fetch(proxyurl+'/stats/hourly').then(response => response.json()).then(data => {
       let array = [["date","hour","impressions","clicks", "revenue"]];
       data.forEach(element => {
@@ -57,19 +60,44 @@ function App() {
       });
       SetDailyStats(array)
     });
-
+    
     poiTable === null && fetch(proxyurl+'/poi').then(response => response.json()).then(data => {
       let arrTable = [];
       let arrGeo = [];
       data.forEach(element => {
         arrTable.push([{ v: element.poi_id, f: element.poi_id.toString(), p: {style: ''} },{ v: element.name, f: element.name, p: {style: ''} },{ v: element.lat, f: element.lat.toString(), p: {style: ''} },{ v: element.lon, f: element.lon.toString(), p: {style: ''} } ]);
-
+        
         arrGeo.push([element.lat , element.lon , element.name]);
       });
       SetFilteredPoi(arrTable)
       SetPoiTable(arrTable)
       SetPoiGeo(arrGeo)
+      
     });
+  });
+
+  const mapRef = useRef();
+  const [bounds, setBounds] = useState(null);
+  const [zoom, setZoom] = useState(10);
+  const url = proxyurl+'/poi';
+  const { data, error } = useSwr(url, { fetcher });
+  const crimes = data && !error ? data.slice(0, 2000) : [];
+  const points = crimes.map(poi => ({
+    type: "Feature",
+    properties: { cluster: false, poiId: poi.poi_id, name: poi.name },
+    geometry: {
+      type: "Point",
+      coordinates: [
+        parseFloat(poi.lon),
+        parseFloat(poi.lat)
+      ]
+    }
+  }));
+ const { clusters, supercluster } = useSupercluster({
+    points,
+    bounds,
+    zoom,
+    options: { radius: 75, maxZoom: 20 }
   });
 
   function searchFunc(val){
@@ -100,6 +128,7 @@ function App() {
     },
     zoom: 5
   };
+
 
   return (
     <div className="App">
@@ -207,8 +236,69 @@ function App() {
         bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
         defaultCenter={defaultProps.center}
         defaultZoom={defaultProps.zoom}
+        yesIWantToUseGoogleMapApiInternals
+        onGoogleApiLoaded={({ map }) => {
+          mapRef.current = map;
+        }}
+        onChange={({ zoom, bounds }) => {
+          setZoom(zoom);
+          setBounds([
+            bounds.nw.lng,
+            bounds.se.lat,
+            bounds.se.lng,
+            bounds.nw.lat
+          ]);
+        }}
       >
-        {
+        {  clusters.map(cluster => {
+          const [longitude, latitude] = cluster.geometry.coordinates;
+          const {
+            cluster: isCluster,
+            point_count: pointCount
+          } = cluster.properties;
+
+          if (isCluster) {
+            return (
+              <Marker
+                key={`cluster-${cluster.id}`}
+                lat={latitude}
+                lng={longitude}
+              >
+                <div
+                  className="cluster-marker"
+                  style={{
+                    width: `${10 + (pointCount / points.length) * 20}px`,
+                    height: `${10 + (pointCount / points.length) * 20}px`
+                  }}
+                  onClick={() => {
+                    const expansionZoom = Math.min(
+                      supercluster.getClusterExpansionZoom(cluster.id),
+                      20
+                    );
+                    mapRef.current.setZoom(expansionZoom);
+                    mapRef.current.panTo({ lat: latitude, lng: longitude });
+                  }}
+                >
+                  {pointCount}
+                </div>
+              </Marker>
+            );
+          }
+
+          return (
+            <Marker
+              key={`poi-${cluster.properties.poiId}`}
+              lat={latitude}
+              lng={longitude}
+            >
+              <button className="poi-marker">
+                <img src="https://img.icons8.com/plasticine/100/000000/place-marker.png" alt="poi doesn't pay" />
+                <span>{cluster.properties.name}</span>
+              </button>
+            </Marker>
+          );
+        })}
+        {/* {
           poiGeo.map((item , index)=>{
             return (
               <Marker key={index}
@@ -218,7 +308,7 @@ function App() {
               />
             )
           })
-        }
+        } */}
       </GoogleMapReact>
         </div>
       }
@@ -226,5 +316,8 @@ function App() {
     
   );
 }
-const Marker = ( {text} ) => <div className="pin"><span>{text}</span><div></div></div>;
+const fetcher = (...args) => fetch(...args).then(response => response.json());
+
+const Marker = ({ children }) => children;
+// const Marker = ( {text} ) => <div className="pin"><span>{text}</span><div></div></div>;
 export default App;

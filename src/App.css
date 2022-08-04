@@ -124,24 +124,11 @@ input[type=button]{
   max-width: 100%;
   float: right;
 }
-.pin{
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: red;
-  display: flex;
-}
-.pin div{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: white;
-  margin: auto;
-}
-.pin:hover span{
+
+.poi-marker:hover span{
   display: block !important;
 }
-.pin span{
+.poi-marker span{
   background-color: aliceblue;
   position: absolute;
   left: 24px;
@@ -150,4 +137,24 @@ input[type=button]{
   border-radius: 5px;
   display: none;
   min-inline-size: max-content;
+  z-index: 10;
+}
+
+.cluster-marker {
+  color: #fff;
+  background: #f15b6c;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.poi-marker {
+  background: none;
+  border: none;
+}
+
+.poi-marker img {
+  width: 32px;
 }
