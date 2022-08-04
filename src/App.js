@@ -170,39 +170,39 @@ function App() {
       {
         dataType === 1 ? <>
         {
-        dailyStats && <Chart chartType={eventVisual} width="96%" height="400px" data={dailyStats} options={{
+        dailyStats ? <Chart chartType={eventVisual} width="96%" height="400px" data={dailyStats} options={{
           explorer: {},
           chart: {
             title: "Events Daily"
           },
-        }} />
+        }} /> : <div>Loading chart...</div>
       }
       <br /><br />
       {
-        hourlyEvent && <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
+        hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
           explorer: {},
           chart: {
             title: "Events Hourly"
           },
-        }} />
+        }} /> : <div>Loading chart...</div>
       }
         </> : <>
         {
-        dailyEvent && <Chart chartType={eventVisual} width="96%" height="400px" data={dailyEvent} options={{
+        dailyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={dailyEvent} options={{
           explorer: {},
           chart: {
             title: "Events Daily"
           },
-        }} />
+        }} />: <div>Loading chart...</div>
         }
         <br /><br />
         {
-          hourlyEvent && <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyEvent} options={{
+          hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyEvent} options={{
             explorer: {},
             chart: {
               title: "Events Hourly"
             },
-          }} />
+          }} /> : <div>Loading chart...</div>
         }
         </>
       }
@@ -219,7 +219,7 @@ function App() {
         </div>
       }
       {
-        page === 2 && poiTable && poiTable.length && <div className='view noNav'>
+        page === 2 && clusters &&<div className='view noNav'>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
         defaultCenter={defaultProps.center}
