@@ -146,6 +146,7 @@ function App() {
       {
         page === 0 && <div>
         <ul className="leftNav">
+          <h3>Data Type</h3>
         <li>
           <label className={dataType === 0 ? "selectedButton" : ''}>
             <input type="radio" value={0} name="dataType" onChange={ (e) => {SetDatatype(0)}} /> Events
@@ -154,7 +155,7 @@ function App() {
             <input type="radio" value={1} name="dataType" onChange={ (e) => {SetDatatype(1)}} /> Stats
           </label>
         </li>
-        <br /><br /><br />
+        <h3>Data Visual</h3>
         {
           visuals.map((item , index)=>{
             return (
@@ -210,17 +211,17 @@ function App() {
         </div>
       }
       {
-        page === 1 && <>
+        page === 1 && <div className='view noNav'>
         {
-          poiTable && poiTable.length ? <div className='view noNav'>
+          poiTable && poiTable.length ? <>
           <input type="text" placeholder='Search here...' onChange={(e)=>{ searchFunc(e.target.value.toLowerCase()) }}/>
           <Chart chartType="Table" width="100%" height="100%" data={[poiHeader , ...filteredPoi]} options={{
             showRowNumber: false, 
             allowHtml: true,
           }} />
-        </div>: <div>Loading table...</div>
+        </>: <div>Loading table...</div>
         }
-        </>
+        </div>
       }
       {
         page === 2 && clusters &&<div className='view noNav'>
