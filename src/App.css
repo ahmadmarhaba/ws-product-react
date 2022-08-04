@@ -99,6 +99,7 @@
   height: 50px;
   margin-bottom: 12px;
   line-height: 50px;
+  font-size: 20px;
 }
 .leftNav input[type=radio]{
   display: none;
@@ -112,6 +113,7 @@
   background-color: transparent;
   cursor: pointer;
   padding: 0;
+  font-size: 20px;
 }
 .view{
   position: fixed;
@@ -141,6 +143,7 @@
   width: 300px;
   max-width: 100%;
   float: right;
+  font-size: 18px;
 }
 
 .poi-marker:hover span{
@@ -175,4 +178,16 @@
 
 .poi-marker img {
   width: 32px;
+}
+
+.google-visualization-table-table{
+  border: 2px solid #e7e7e7;
+    border-radius: 5px;
+
+}
+.google-visualization-table-table tr{
+  font-size: 18px;
+}
+.google-visualization-table-table tr.google-visualization-table-tr-head{
+  background-color: transparent;
 }
