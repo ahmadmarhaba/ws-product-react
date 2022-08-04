@@ -220,18 +220,6 @@ function App() {
       }
       {
         page === 2 && poiTable && poiTable.length && <div className='view noNav'>
-          {/* <Chart chartType="GeoChart" width="100%" height="100%" data={poiGeo} options={{
-            region: "CA",
-            displayMode: 'markers',
-            colorAxis: {colors: ['green', 'blue']},
-            backgroundColor: "#81d4fa",
-            datalessRegionColor: "#f3f3f3",
-            geochartVersion: 11,
-            resolution : "provinces",
-            tooltip: {showColorCode: true , trigger : "selection"},
-            magnifyingGlass : {enable: true, zoomFactor: 25},
-            explorer : true
-          }} /> */}
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
         defaultCenter={defaultProps.center}
@@ -298,17 +286,6 @@ function App() {
             </Marker>
           );
         })}
-        {/* {
-          poiGeo.map((item , index)=>{
-            return (
-              <Marker key={index}
-                lat={item[0]}
-                lng={item[1]}
-                text={item[2]}
-              />
-            )
-          })
-        } */}
       </GoogleMapReact>
         </div>
       }
@@ -319,5 +296,4 @@ function App() {
 const fetcher = (...args) => fetch(...args).then(response => response.json());
 
 const Marker = ({ children }) => children;
-// const Marker = ( {text} ) => <div className="pin"><span>{text}</span><div></div></div>;
 export default App;
