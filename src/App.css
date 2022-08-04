@@ -102,6 +102,7 @@ input[type=button]{
   right: 14px;
   top:100px;
   bottom: 14px;
+  overflow-y: auto;
 }
 .noNav{
   left: 14px;
