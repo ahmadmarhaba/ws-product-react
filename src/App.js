@@ -133,6 +133,9 @@ function App() {
   return (
     <div className="App">
       <ul className="topNav">
+        <li>
+          <span>WS Product React</span>
+        </li>
         {
           pages.map((item , index)=>{
             return (
