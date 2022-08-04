@@ -108,7 +108,7 @@ input[type=button]{
 }
 .noNav th, td{
   padding: 12px 24px !important;
-  text-align: left
+  text-align: left !important;
 }
 .noNav :is(.google-visualization-table , table){
   width: 100%;
