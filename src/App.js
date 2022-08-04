@@ -210,13 +210,17 @@ function App() {
         </div>
       }
       {
-        page === 1 && poiTable && poiTable.length && <div className='view noNav'>
+        page === 1 && <>
+        {
+          poiTable && poiTable.length ? <div className='view noNav'>
           <input type="text" placeholder='Search here...' onChange={(e)=>{ searchFunc(e.target.value.toLowerCase()) }}/>
           <Chart chartType="Table" width="100%" height="100%" data={[poiHeader , ...filteredPoi]} options={{
             showRowNumber: false, 
             allowHtml: true,
           }} />
-        </div>
+        </div>: <div>Loading table...</div>
+        }
+        </>
       }
       {
         page === 2 && clusters &&<div className='view noNav'>
