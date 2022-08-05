@@ -106,9 +106,11 @@ function App() {
         item.p.style = "";
       });
     });
+    
     let filteredArr = poiTable.filter( element =>{ return element[0].f.includes(val) || element[1].f.toLowerCase().includes(val) || element[2].f.includes(val) || element[3].f.includes(val) });
     let unfilteredArr = poiTable.filter( element =>{ return !element[0].f.includes(val) && !element[1].f.toLowerCase().includes(val) && !element[2].f.includes(val) && !element[3].f.includes(val) });
-    filteredArr.length > 0 && SetFilteredPoi(() => {
+
+    SetFilteredPoi(() => {
       let temp = [...filteredArr];
       if(val.length > 0){
         [...temp].forEach(element => {
