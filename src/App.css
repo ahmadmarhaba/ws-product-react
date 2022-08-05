@@ -231,9 +231,20 @@
   bottom: 14px;
   right: 14px;
   left: 14px;
+  font-size: 20px;
 }
-.footer span{
-float: right;
-font-size: 20px;
-line-height: 60px;
+.footer a{
+
+}
+.footer li{
+  display: inline;
+}
+.footer ul{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  line-height: 60px;
 }

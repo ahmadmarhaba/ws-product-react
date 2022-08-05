@@ -305,7 +305,10 @@ function App() {
       }
       </div>
       <div className='footer'>
-        <span>{`Page ${page+1} / 3`}</span>
+        <ul>
+          <li>My Github <a href='https://github.com/ahmadmarhaba'>Ahmad Marhaba</a> </li>
+          <li>{`Page ${page+1} / 3`} </li>
+        </ul>
       </div>
     </div>
     
