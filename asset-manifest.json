@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/ws-product-react/static/css/main.e00afa23.chunk.css",
-    "main.js": "/ws-product-react/static/js/main.98eac3b4.chunk.js",
-    "main.js.map": "/ws-product-react/static/js/main.98eac3b4.chunk.js.map",
+    "main.css": "/ws-product-react/static/css/main.13d0da23.chunk.css",
+    "main.js": "/ws-product-react/static/js/main.54a476f8.chunk.js",
+    "main.js.map": "/ws-product-react/static/js/main.54a476f8.chunk.js.map",
     "runtime-main.js": "/ws-product-react/static/js/runtime-main.04afedb7.js",
     "runtime-main.js.map": "/ws-product-react/static/js/runtime-main.04afedb7.js.map",
     "static/js/2.3ea13a02.chunk.js": "/ws-product-react/static/js/2.3ea13a02.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.069f90ae.chunk.js": "/ws-product-react/static/js/3.069f90ae.chunk.js",
     "static/js/3.069f90ae.chunk.js.map": "/ws-product-react/static/js/3.069f90ae.chunk.js.map",
     "index.html": "/ws-product-react/index.html",
-    "static/css/main.e00afa23.chunk.css.map": "/ws-product-react/static/css/main.e00afa23.chunk.css.map",
+    "static/css/main.13d0da23.chunk.css.map": "/ws-product-react/static/css/main.13d0da23.chunk.css.map",
     "static/js/2.3ea13a02.chunk.js.LICENSE.txt": "/ws-product-react/static/js/2.3ea13a02.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.04afedb7.js",
     "static/js/2.3ea13a02.chunk.js",
-    "static/css/main.e00afa23.chunk.css",
-    "static/js/main.98eac3b4.chunk.js"
+    "static/css/main.13d0da23.chunk.css",
+    "static/js/main.54a476f8.chunk.js"
   ]
 }
