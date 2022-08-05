@@ -146,8 +146,11 @@ function App() {
           })
         }
       </ul>
+        <div className={`view ${page !== 0 ? 'noNav' : ''}`}>
+
+        
       {
-        page === 0 && <div>
+        page === 0 && <>
         <ul className="leftNav">
           <h3>Data Type</h3>
         <li>
@@ -169,52 +172,51 @@ function App() {
           })
         }
       </ul>
-      <div className="view">
-
-      {
-        dataType === 1 ? <>
+      <div className='dataContain'>   
         {
-        dailyStats ? <Chart chartType={eventVisual} width="96%" height="400px" data={dailyStats} options={{
-          explorer: {},
-          chart: {
-            title: "Events Daily"
-          },
-        }} /> : <div>Loading chart...</div>
-      }
-      <br /><br />
-      {
-        hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
-          explorer: {},
-          chart: {
-            title: "Events Hourly"
-          },
-        }} /> : <div>Loading chart...</div>
-      }
-        </> : <>
-        {
-        dailyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={dailyEvent} options={{
-          explorer: {},
-          chart: {
-            title: "Events Daily"
-          },
-        }} />: <div>Loading chart...</div>
+          dataType === 1 ? <>
+          {
+          dailyStats ? <Chart chartType={eventVisual} width="96%" height="400px" data={dailyStats} options={{
+            explorer: {},
+            chart: {
+              title: "Events Daily"
+            },
+          }} /> : <Loading />
         }
         <br /><br />
         {
-          hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyEvent} options={{
+          hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
             explorer: {},
             chart: {
               title: "Events Hourly"
             },
-          }} /> : <div>Loading chart...</div>
+          }} /> : <Loading />
         }
+          </> : <>
+          {
+          dailyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={dailyEvent} options={{
+            explorer: {},
+            chart: {
+              title: "Events Daily"
+            },
+          }} />: <Loading />
+          }
+          <br /><br />
+          {
+            hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyEvent} options={{
+              explorer: {},
+              chart: {
+                title: "Events Hourly"
+              },
+            }} /> : <Loading />
+          }
+          </>
+        }
+        </div>
         </>
       }
-      </div> 
-        </div>
-      }
       {
-        page === 1 && <div className='view noNav'>
+        page === 1 && <>
         {
           poiTable && poiTable.length ? <>
           <input type="text" placeholder='Search here...' onChange={(e)=>{ searchFunc(e.target.value.toLowerCase()) }}/>
@@ -222,12 +224,12 @@ function App() {
             showRowNumber: false, 
             allowHtml: true,
           }} />
-        </>: <div>Loading table...</div>
+        </>: <Loading />
         }
-        </div>
+        </>
       }
       {
-        page === 2 && clusters &&<div className='view noNav'>
+        page === 2 && clusters &&<>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
         defaultCenter={defaultProps.center}
@@ -289,14 +291,22 @@ function App() {
             >
               <button className="poi-marker">
                 <img src="https://img.icons8.com/plasticine/100/000000/place-marker.png" alt="poi doesn't pay" />
-                <span>{cluster.properties.name}</span>
+                <ul>
+                  <li>{cluster.properties.name}</li>
+                  <li>{`Latitude: ` + latitude}</li>
+                  <li>{`Longitude: `+longitude}</li>
+                </ul>
               </button>
             </Marker>
           );
         })}
       </GoogleMapReact>
-        </div>
+        </>
       }
+      </div>
+      <div className='footer'>
+        <span>{`Page ${page+1} / 3`}</span>
+      </div>
     </div>
     
   );
@@ -304,4 +314,5 @@ function App() {
 const fetcher = (...args) => fetch(...args).then(response => response.json());
 
 const Marker = ({ children }) => children;
+const Loading = () => <div className='loading'><span>Loading</span><img src={`/ws-product-react/loading.gif`} alt='...'/></div>;
 export default App;
