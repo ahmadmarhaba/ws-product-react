@@ -265,7 +265,7 @@ function App() {
       {
         page === 2 && <>
          {
-           clusters ? <GoogleMapReact
+           poiTable && poiTable.length && clusters ? <GoogleMapReact
            bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
            defaultCenter={defaultProps.center}
            defaultZoom={defaultProps.zoom}
