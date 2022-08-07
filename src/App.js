@@ -263,77 +263,82 @@ function App() {
         </>
       }
       {
-        page === 2 && clusters ? <GoogleMapReact
-        bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
-        defaultCenter={defaultProps.center}
-        defaultZoom={defaultProps.zoom}
-        yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={({ map }) => {
-          mapRef.current = map;
-        }}
-        onChange={({ zoom, bounds }) => {
-          setZoom(zoom);
-          setBounds([
-            bounds.nw.lng,
-            bounds.se.lat,
-            bounds.se.lng,
-            bounds.nw.lat
-          ]);
-        }}
-      >
-        {  clusters.map(cluster => {
-          const [longitude, latitude] = cluster.geometry.coordinates;
-          const {
-            cluster: isCluster,
-            point_count: pointCount
-          } = cluster.properties;
-
-          if (isCluster) {
-            return (
-              <Marker
-                key={`cluster-${cluster.id}`}
-                lat={latitude}
-                lng={longitude}
-              >
-                <div
-                  className="cluster-marker"
-                  style={{
-                    width: `${10 + (pointCount / points.length) * 20}px`,
-                    height: `${10 + (pointCount / points.length) * 20}px`
-                  }}
-                  onClick={() => {
-                    const expansionZoom = Math.min(
-                      supercluster.getClusterExpansionZoom(cluster.id),
-                      20
-                    );
-                    mapRef.current.setZoom(expansionZoom);
-                    mapRef.current.panTo({ lat: latitude, lng: longitude });
-                  }}
-                >
-                  {pointCount}
-                </div>
-              </Marker>
-            );
-          }
-
-          return (
-            <Marker
-              key={`poi-${cluster.properties.poiId}`}
-              lat={latitude}
-              lng={longitude}
-            >
-              <button className="poi-marker">
-                <img src="https://img.icons8.com/plasticine/100/000000/place-marker.png" alt="poi doesn't pay" />
-                <ul>
-                  <li>{cluster.properties.name}</li>
-                  <li>{`Latitude: ` + latitude}</li>
-                  <li>{`Longitude: `+longitude}</li>
-                </ul>
-              </button>
-            </Marker>
-          );
-        })}
-      </GoogleMapReact> : poiError ? <ErrorDataRequest /> : <Loading />
+        page === 2 && <>
+         {
+           clusters ? <GoogleMapReact
+           bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
+           defaultCenter={defaultProps.center}
+           defaultZoom={defaultProps.zoom}
+           yesIWantToUseGoogleMapApiInternals
+           onGoogleApiLoaded={({ map }) => {
+             mapRef.current = map;
+           }}
+           onChange={({ zoom, bounds }) => {
+             setZoom(zoom);
+             setBounds([
+               bounds.nw.lng,
+               bounds.se.lat,
+               bounds.se.lng,
+               bounds.nw.lat
+             ]);
+           }}
+         >
+           {  clusters.map(cluster => {
+             const [longitude, latitude] = cluster.geometry.coordinates;
+             const {
+               cluster: isCluster,
+               point_count: pointCount
+             } = cluster.properties;
+   
+             if (isCluster) {
+               return (
+                 <Marker
+                   key={`cluster-${cluster.id}`}
+                   lat={latitude}
+                   lng={longitude}
+                 >
+                   <div
+                     className="cluster-marker"
+                     style={{
+                       width: `${10 + (pointCount / points.length) * 20}px`,
+                       height: `${10 + (pointCount / points.length) * 20}px`
+                     }}
+                     onClick={() => {
+                       const expansionZoom = Math.min(
+                         supercluster.getClusterExpansionZoom(cluster.id),
+                         20
+                       );
+                       mapRef.current.setZoom(expansionZoom);
+                       mapRef.current.panTo({ lat: latitude, lng: longitude });
+                     }}
+                   >
+                     {pointCount}
+                   </div>
+                 </Marker>
+               );
+             }
+   
+             return (
+               <Marker
+                 key={`poi-${cluster.properties.poiId}`}
+                 lat={latitude}
+                 lng={longitude}
+               >
+                 <button className="poi-marker">
+                   <img src="https://img.icons8.com/plasticine/100/000000/place-marker.png" alt="poi doesn't pay" />
+                   <ul>
+                     <li>{cluster.properties.name}</li>
+                     <li>{`Latitude: ` + latitude}</li>
+                     <li>{`Longitude: `+longitude}</li>
+                   </ul>
+                 </button>
+               </Marker>
+             );
+           })}
+         </GoogleMapReact> : poiError ? <ErrorDataRequest /> : <Loading />
+         }
+        </>
+         
       }
       </div>
       <div className='footer'>
