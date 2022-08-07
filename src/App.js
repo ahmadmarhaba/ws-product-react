@@ -263,10 +263,7 @@ function App() {
         </>
       }
       {
-        page === 2 && 
-        clusters &&
-        <>
-      <GoogleMapReact
+        page === 2 && clusters ? <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
         defaultCenter={defaultProps.center}
         defaultZoom={defaultProps.zoom}
@@ -336,8 +333,7 @@ function App() {
             </Marker>
           );
         })}
-      </GoogleMapReact>
-        </>
+      </GoogleMapReact> : poiError ? <ErrorDataRequest /> : <Loading />
       }
       </div>
       <div className='footer'>
