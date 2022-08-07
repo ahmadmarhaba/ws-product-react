@@ -355,5 +355,5 @@ function App() {
 
 const Marker = ({ children }) => children;
 const Loading = () => <div className='loading'><span>Loading</span><img src={`/ws-product-react/loading.gif`} alt='...'/></div>;
-const ErrorDataRequest = () => <div className='loading error'><span>Too many calls been made. Try again later.</span></div>;
+const ErrorDataRequest = () => <div className='loading error'><span>{`Too many calls been made.`}<br />{`Try again later.`}</span></div>;
 export default App;
