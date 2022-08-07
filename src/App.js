@@ -2,12 +2,11 @@ import './App.css';
 import React, { useState, useEffect , useRef} from 'react';
 import { Chart } from "react-google-charts";
 import useSupercluster from "use-supercluster"
-import useSwr from "swr";
 import GoogleMapReact from 'google-map-react';
 
 function App() {
 
-  const proxyurl = "https://vast-glass-iron.glitch.me"
+  const proxyurl = "https://ahmadmarhaba-ws-product-nodejs.herokuapp.com"
   const pages = ["General Charts", "Data Table", "Geo Map"];
   const [page,SetPage] = useState(0)  
 
@@ -18,70 +17,101 @@ function App() {
   const [poiGeo,SetPoiGeo] = useState(null)
 
   const [dataType,SetDatatype] = useState(0)
-
+  
   const [hourlyStats,SetHourlyStats] = useState(null)
   const [dailyStats,SetDailyStats] = useState(null)
-
+  
   const [hourlyEvent,SetHourlyEvent] = useState(null)
   const [dailyEvent,SetDailyEvent] = useState(null)
   const visuals = ["Line", "Bar", "LineChart", "BarChart"];
   const [eventVisual,SetEventVisual] = useState("Line")  
   const [eventVisualSelected,SetEventVisualSelected] = useState(0)  
   
+  const [hourlyEventError,SetHourlyEventError] = useState(false)
+  const [dailyEventError,SetDailyEventError] = useState(false)
 
+  const [hourlyStatsError,SetHourlyStatsError] = useState(false)
+  const [dailyStatsError,SetDailyStatsError] = useState(false)
+
+  const [poiError,SetPoiError] = useState(false)
   
-  useEffect(() => {
+
+  useEffect(()=>{
+
     hourlyEvent === null && fetch(proxyurl+'/events/hourly').then(response => response.json()).then(data => {
+      if(data.response === "Error"){
+        SetHourlyEventError(true)
+        return;
+      }
       let array = [["Date","Events","Hour"]];
       data.forEach(element => {
         array.push([(new Date(element.date)).toDateString(),parseInt(element.events),element.hour])
       });
       SetHourlyEvent(array)
-    });
+    }).catch(err => { console.error(err)});
+  },[hourlyEvent])
+  useEffect(()=>{
     dailyEvent === null && fetch(proxyurl+'/events/daily').then(response => response.json()).then(data => {
+      if(data.response === "Error"){
+        SetDailyEventError(true)
+        return;
+      }
       let array = [["Date","Events"]];
       data.forEach(element => {
         array.push([(new Date(element.date)).toDateString(),parseInt(element.events)])
       });
       SetDailyEvent(array)
-    });
-    
+    }).catch(err => { console.error(err)});;
+  },[dailyEvent])
+  useEffect(()=>{
     hourlyStats=== null && fetch(proxyurl+'/stats/hourly').then(response => response.json()).then(data => {
+      if(data.response === "Error"){
+        SetHourlyStatsError(true)
+        return;
+      }
       let array = [["date","hour","impressions","clicks", "revenue"]];
       data.forEach(element => {
         array.push([(new Date(element.date)).toDateString(),parseInt(element.hour),parseInt(element.impressions),parseInt(element.clicks),parseInt(element.revenue)])
       });
       SetHourlyStats(array)
-    });
+    }).catch(err => { console.error(err)});;
+  },[hourlyStats])
+  useEffect(()=>{
     dailyStats === null && fetch(proxyurl+'/stats/daily').then(response => response.json()).then(data => {
+      if(data.response === "Error"){
+        SetDailyStatsError(true)
+        return;
+      }
       let array = [["date","impressions","clicks", "revenue"]];
       data.forEach(element => {
         array.push([(new Date(element.date)).toDateString(),parseInt(element.impressions),parseInt(element.clicks),parseInt(element.revenue)])
       });
       SetDailyStats(array)
-    });
-    
+    }).catch(err => { console.error(err)});;
+  },[dailyStats])
+  useEffect(()=>{
     poiTable === null && fetch(proxyurl+'/poi').then(response => response.json()).then(data => {
+      if(data.response === "Error"){
+        SetPoiError(true)
+        return;
+      }
       let arrTable = [];
-      let arrGeo = [];
+
       data.forEach(element => {
         arrTable.push([{ v: element.poi_id, f: element.poi_id.toString(), p: {style: ''} },{ v: element.name, f: element.name, p: {style: ''} },{ v: element.lat, f: element.lat.toString(), p: {style: ''} },{ v: element.lon, f: element.lon.toString(), p: {style: ''} } ]);
-        
-        arrGeo.push([element.lat , element.lon , element.name]);
       });
       SetFilteredPoi(arrTable)
       SetPoiTable(arrTable)
-      SetPoiGeo(arrGeo)
-      
-    });
-  });
+      SetPoiGeo(data)
+    }).catch(err => { console.error(err)});;
+  },[poiTable])
 
   const mapRef = useRef();
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(10);
-  const url = proxyurl+'/poi';
-  const { data, error } = useSwr(url, { fetcher });
-  const crimes = data && !error ? data.slice(0, 2000) : [];
+
+  const crimes = poiGeo != null && poiGeo.length > 0 ? poiGeo.slice(0, 2000) : [];
+
   const points = crimes.map(poi => ({
     type: "Feature",
     properties: { cluster: false, poiId: poi.poi_id, name: poi.name },
@@ -94,12 +124,14 @@ function App() {
     }
   }));
  const { clusters, supercluster } = useSupercluster({
-    points,
-    bounds,
-    zoom,
-    options: { radius: 75, maxZoom: 20 }
+   points,
+   bounds,
+   zoom,
+   options: { radius: 75, maxZoom: 20 }
   });
 
+
+  
   function searchFunc(val){
     poiTable.forEach(element => {
       element.forEach(item => {
@@ -183,16 +215,16 @@ function App() {
             chart: {
               title: "Events Daily"
             },
-          }} /> : <Loading />
+          }} /> : dailyStatsError ? <ErrorDataRequest /> : <Loading />
         }
         <br /><br />
         {
-          hourlyEvent ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
+          hourlyStats ? <Chart chartType={eventVisual} width="96%" height="400px" data={hourlyStats} options={{
             explorer: {},
             chart: {
               title: "Events Hourly"
             },
-          }} /> : <Loading />
+          }} /> : hourlyStatsError ? <ErrorDataRequest /> : <Loading />
         }
           </> : <>
           {
@@ -201,7 +233,7 @@ function App() {
             chart: {
               title: "Events Daily"
             },
-          }} />: <Loading />
+          }} /> : dailyEventError ? <ErrorDataRequest /> : <Loading />
           }
           <br /><br />
           {
@@ -210,7 +242,7 @@ function App() {
               chart: {
                 title: "Events Hourly"
               },
-            }} /> : <Loading />
+            }} /> : hourlyEventError ? <ErrorDataRequest /> : <Loading />
           }
           </>
         }
@@ -226,12 +258,14 @@ function App() {
             showRowNumber: false, 
             allowHtml: true,
           }} />
-        </>: <Loading />
+        </>: poiError ? <ErrorDataRequest /> : <Loading />
         }
         </>
       }
       {
-        page === 2 && clusters &&<>
+        page === 2 && 
+        clusters &&
+        <>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyAKm8MCGBPYCd9mwXqXtHYf_vFM2BtglIA" }}
         defaultCenter={defaultProps.center}
@@ -316,8 +350,9 @@ function App() {
     
   );
 }
-const fetcher = (...args) => fetch(...args).then(response => response.json());
+
 
 const Marker = ({ children }) => children;
 const Loading = () => <div className='loading'><span>Loading</span><img src={`/ws-product-react/loading.gif`} alt='...'/></div>;
+const ErrorDataRequest = () => <div className='loading error'><span>Too many calls been made. Try again later.</span></div>;
 export default App;

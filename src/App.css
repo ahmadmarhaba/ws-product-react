@@ -245,3 +245,7 @@
   list-style-type: none;
   line-height: 60px;
 }
+.error{
+  background-color: #ff3f3f;
+  color: white;
+}
